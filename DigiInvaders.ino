@@ -67,86 +67,10 @@ void loop()
 
 void check()
 {
-  playerSpeed --;
-  if (playerSpeed == 0)
-  {
-    if (digiPixel.buttonAPressed)
-    {
-      if (!bulletShot)
-      {
-        bulletShot = true;
-        bulletX = playerX;
-        bulletY = 1;
-      }
-    }
-    if (digiPixel.buttonLeftPressed && playerX > 0)
-    {
-      playerX--;
-    }
-    else if (digiPixel.buttonRightPressed && playerX < 7)
-    {
-      playerX++;
-    }
-    playerSpeed = playerSpeedSave;
-  }
-  if (bulletShot)
-  {
-    bulletSpeed --;
-    if (bulletSpeed == 0)
-    {
-      if (bulletY < 7)
-      {
-        for (int row = 0; row < invaderRows; row++)
-        {
-          for (int col = 0; col < 4; col++)
-          {
-            if (bulletX == invadersX[col] && bulletY == invadersY[row] && invadersDead[(row*4)+col] == false)
-            {
-              invadersDead[(row*4)+col] = true;
-              bulletShot = false;
-              killed ++;
-            }       
-          }
-        }
-        bulletY++;
-      }
-      else 
-      {
-        bulletShot = false;
-      }
-      bulletSpeed = bulletSpeedSave;
-    }
-  } 
-  invaderSpeed --;
-  if (invaderSpeed == 0)
-  {
-    for (int row = 0; row < invaderRows; row++)
-    {
-      for (int col = 0; col < 4; col++)
-      {
-        if (row < 1)
-        {
-          if (invadersX[col] % 2 == 0)
-          {
-            invadersX[col] ++;
-          }
-          else
-          {
-            invadersX[col] --;
-          }
-        }
-        if (invadersY[row] < 2 && invadersDead[(row*4)+col] == false)
-        {
-          gameOver = true;
-        }
-      }
-      if (invadersY[row] > 1)
-      {
-        invadersY[row] --;
-      } 
-    }
-    invaderSpeed = invaderSpeedSave;
-  }
+  playerCheck();
+  bulletCheck();
+  invaderCheck();
+  checkAllDead();
   if (gameOver)
   {
     //Reset invader
@@ -201,4 +125,112 @@ void showDeath()
   delay(1000);
 }
 
+void playerCheck()
+{
+  playerSpeed --;
+  if (playerSpeed == 0)
+  {
+    if (digiPixel.buttonAPressed)
+    {
+      if (!bulletShot)
+      {
+        bulletShot = true;
+        bulletX = playerX;
+        bulletY = 1;
+      }
+    }
+    if (digiPixel.buttonLeftPressed && playerX > 0)
+    {
+      playerX--;
+    }
+    else if (digiPixel.buttonRightPressed && playerX < 7)
+    {
+      playerX++;
+    }
+    playerSpeed = playerSpeedSave;
+  }
+}
+
+void bulletCheck()
+{
+  if (bulletShot)
+  {
+    bulletSpeed --;
+    if (bulletSpeed == 0)
+    {
+      if (bulletY < 8)
+      {
+        for (int row = 0; row < invaderRows; row++)
+        {
+          for (int col = 0; col < 4; col++)
+          {
+            if (bulletX == invadersX[col] && bulletY == invadersY[row] && invadersDead[(row*4)+col] == false)
+            {
+              invadersDead[(row*4)+col] = true;
+              bulletShot = false;
+              killed ++;
+            }       
+          }
+        }
+        bulletY++;
+      }
+      else 
+      {
+        bulletShot = false;
+      }
+      bulletSpeed = bulletSpeedSave;
+    }
+  } 
+}
+
+void invaderCheck()
+{
+  invaderSpeed --;
+  if (invaderSpeed == 0)
+  {
+    for (int row = 0; row < invaderRows; row++)
+    {
+      for (int col = 0; col < 4; col++)
+      {
+        if (row < 1)
+        {
+          if (invadersX[col] % 2 == 0)
+          {
+            invadersX[col] ++;
+          }
+          else
+          {
+            invadersX[col] --;
+          }
+        }
+        if (invadersY[row] < 2 && invadersDead[(row*4)+col] == false)
+        {
+          gameOver = true;
+        }
+      }
+      if (invadersY[row] > 1)
+      {
+        invadersY[row] --;
+      } 
+    }
+    invaderSpeed = invaderSpeedSave;
+  }
+} 
+
+void checkAllDead()
+{
+  for (int i; i < invaders; i++)
+  {
+    boolean allDead = true;
+    if (invadersDead[i] == false)
+    {
+      allDead = false;
+      break;
+    }
+    if (allDead)
+    {
+      gameOver = true
+    }
+  }
+}
 
