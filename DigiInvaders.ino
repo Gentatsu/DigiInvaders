@@ -31,7 +31,7 @@ byte killed = 0;
 //DO NOT CHANGE FROM 4
 byte invadersX[4];
 //How many rows of invaders 
-const byte invaderRows = 3; 
+const byte invaderRows = 4; 
 byte invadersY[invaderRows];
 boolean invadersDead[invaderRows*4];
 byte invaders = invaderRows*4;
@@ -40,7 +40,6 @@ void initGame()
 {
   //Initiliases the positions and shiz of the invaders and resets some stuff. 
   gameOver = false;
-  killed = 0;
   for (int row = 0; row < invaderRows; row++)
   {
     for (int col = 0; col < 4; col++)
@@ -76,6 +75,7 @@ void check()
     //Reset invader
     showDeath();
     initGame();
+    killed = 0;
   }
 }
 
@@ -219,18 +219,18 @@ void invaderCheck()
 
 void checkAllDead()
 {
-  for (int i; i < invaders; i++)
+  boolean allDead = true;
+  for (int i=0; i < invaders; i++)
   {
-    boolean allDead = true;
     if (invadersDead[i] == false)
     {
       allDead = false;
       break;
     }
-    if (allDead)
-    {
-      gameOver = true
-    }
+  }
+  if (allDead)
+  {
+    initGame();
   }
 }
 
